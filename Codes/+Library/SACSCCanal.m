@@ -1,11 +1,11 @@
-function [SACSCCs,AvgRate_sps]=SACSCCanal(ST_A_plus,ST_A_minus,ST_B_plus,ST_B_minus,ST_C_plus,ST_C_minus,paramsOUT)
-global ExpControlParams
+function [SACSCCs,AvgRate_sps]=SACSCCanal(ST_A_plus,ST_A_minus,ST_B_plus,ST_B_minus,ST_C_plus,ST_C_minus,paramsOUT, winCorr0Add1Mul)
+
 MAXdelay_ind=round(paramsOUT.MAXdelay_sec/paramsOUT.DELAYbinwidth_sec);  % old XLIM=250
-if isfield(ExpControlParams, 'winCorr0Add1Mul')
-    winCorr0Add1Mul=ExpControlParams.winCorr0Add1Mul;
-else
-    winCorr0Add1Mul=1; % 0 for additive, 1 for multiplicative
-end
+% if isfield(ExpControlParams, 'winCorr0Add1Mul')
+%     winCorr0Add1Mul=ExpControlParams.winCorr0Add1Mul;
+% else
+%     winCorr0Add1Mul=1; % 0 for additive, 1 for multiplicative
+% end
 
 %% COLUMN 1: CONDITION=A
 %% Compute SAC (A+ and A-) %%%%%%%%%%%%%%%%%%%%
@@ -415,7 +415,7 @@ PSDenv_C=abs(FFTadj);  % use freqVEC to store
 
 % SACSCCs=struct('PSDenv_A',PSDenv_A,'PSDenv_B',PSDenv_B,'PSDenv_C',PSDenv_C,'PSD_freqVEC',freqVEC);
 
-SACSCCs=struct('delays_usec',delays_usec, 'SUMCOR_A',SUMCOR_A,'SUMCOR_B',SUMCOR_B,'SUMCOR_C',SUMCOR_C,'PSDenv_A',PSDenv_A,'PSDenv_B',PSDenv_B,'PSDenv_C',PSDenv_C,'PSD_freqVEC',freqVEC);
+SACSCCs=struct('delays_usec',delays_usec(SACinds), 'SUMCOR_A',SUMCOR_A,'SUMCOR_B',SUMCOR_B,'SUMCOR_C',SUMCOR_C,'PSDenv_A',PSDenv_A,'PSDenv_B',PSDenv_B,'PSDenv_C',PSDenv_C,'PSD_freqVEC',freqVEC);
 
 return;
 

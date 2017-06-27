@@ -13,12 +13,12 @@ stim_A_model=CurStims{1,1}{1};
 stim_B_model=CurStims{2,1}{1};
 stim_C_model=CurStims{3,1}{1};
 
-spiketimes_Ap=get_type_polar_spikes(SpikeTrains{1,1});
-spiketimes_An=get_type_polar_spikes(SpikeTrains{1,2});
-spiketimes_Bp=get_type_polar_spikes(SpikeTrains{2,1});
-spiketimes_Bn=get_type_polar_spikes(SpikeTrains{2,2});
-spiketimes_Cp=get_type_polar_spikes(SpikeTrains{3,1});
-spiketimes_Cn=get_type_polar_spikes(SpikeTrains{3,2});
+spiketimes_Ap=DataAnal.get_type_polar_spikes(SpikeTrains{1,1});
+spiketimes_An=DataAnal.get_type_polar_spikes(SpikeTrains{1,2});
+spiketimes_Bp=DataAnal.get_type_polar_spikes(SpikeTrains{2,1});
+spiketimes_Bn=DataAnal.get_type_polar_spikes(SpikeTrains{2,2});
+spiketimes_Cp=DataAnal.get_type_polar_spikes(SpikeTrains{3,1});
+spiketimes_Cn=DataAnal.get_type_polar_spikes(SpikeTrains{3,2});
 
 figure(figHandles.meanRates);
 clf;

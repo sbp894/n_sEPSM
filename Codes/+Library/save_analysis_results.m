@@ -1,12 +1,12 @@
 function save_analysis_results(PSDenv_STRUCT,PSDtfs_STRUCT,PowerMod_STRUCT,PowerTfs_STRUCT,resultsDir,resultPostfix,paramsIN)
 
-PSDenv_S=PSDenv_STRUCT.PSDenv_S;
-PSDenv_N=PSDenv_STRUCT.PSDenv_N;
-PSDenv_SN=PSDenv_STRUCT.PSDenv_SN;
-PSDenv_S_noisefloor=PSDenv_STRUCT.PSDenv_S_noisefloor;
-PSDenv_N_noisefloor=PSDenv_STRUCT.PSDenv_N_noisefloor;
-PSDenv_SN_noisefloor=PSDenv_STRUCT.PSDenv_SN_noisefloor;
-PSDfreqVEC_Hz=PSDenv_STRUCT.PSDfreqVEC_Hz;
+% PSDenv_S=PSDenv_STRUCT.PSDenv_S;
+% PSDenv_N=PSDenv_STRUCT.PSDenv_N;
+% PSDenv_SN=PSDenv_STRUCT.PSDenv_SN;
+% PSDenv_S_noisefloor=PSDenv_STRUCT.PSDenv_S_noisefloor;
+% PSDenv_N_noisefloor=PSDenv_STRUCT.PSDenv_N_noisefloor;
+% PSDenv_SN_noisefloor=PSDenv_STRUCT.PSDenv_SN_noisefloor;
+% PSDfreqVEC_Hz=PSDenv_STRUCT.PSDfreqVEC_Hz;
 
 %tfs
 % PSDtfs_S=PSDtfs_STRUCT.PSDtfs_S;
@@ -47,6 +47,6 @@ paramsFile=PowerMod_STRUCT.params';
 %     PowerMod_S, PowerMod_N, PowerMod_SN, PowerMod_S_noisefloor, PowerMod_N_noisefloor, PowerMod_SN_noisefloor,paramsFile);
 
 Library.parsave([resultsDir 'psd' filesep 'psd' resultPostfix '.mat'],...
-    PowerMod_S, PowerMod_N, PowerMod_SN, PowerMod_S_noisefloor, PowerMod_N_noisefloor, PowerMod_SN_noisefloor,paramsFile);
+    PowerMod_S, PowerMod_N, PowerMod_SN, PowerMod_S_noisefloor, PowerMod_N_noisefloor, PowerMod_SN_noisefloor, paramsFile);
     
 Library.parsave([resultsDir 'paramsIN' filesep 'paramsIN' resultPostfix '.mat'], paramsIN);

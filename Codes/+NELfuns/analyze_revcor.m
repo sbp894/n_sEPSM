@@ -2,7 +2,7 @@ function [SNRenv,CF]=analyze_revcor(StimsFNames,h1,attn)
 
 % disp('check');
 NFFT=2056;
-h=get_h_wn(h1,StimsFNames{2,1}{1});
+h=NELfuns.get_h_wn(h1,StimsFNames{2,1}{1});
 
 stimN_name=StimsFNames{2,1}{1};
 [stimN, ~] = audioread(stimN_name);

@@ -1,5 +1,6 @@
 %%
 %for now, it is defined only for 1 SNR
+% Not used in the new paradigm. 
 
 function ModEP=SNRenv_analysis_DTU(Power_Mat,paramsIN)
 

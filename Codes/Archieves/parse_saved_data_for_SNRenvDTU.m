@@ -1,7 +1,10 @@
-% close all;
-% clc;
+% Remove this file. Old way when PSDs were saved. Now only modulation powers
+% are saved. 
+
 
 % function parse_saved_data_for_SNRenvDTU(resultsDir,resultTxt)
+% close all;
+% clc;
 resultsDir='D:\Study Stuff\Matlab\SNRenv-SimData-Updated4PSDavg\Output\Simulation\20170605-1_imp\';
 resultTxt='CF_%1.4fk_Sent_%i_%s_level_%1.2f_SNR%i_fType%1.0f';
 

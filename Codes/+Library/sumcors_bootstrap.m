@@ -1,7 +1,7 @@
-function [PSDenv_STRUCT,PSDtfs_STRUCT,PowerMod_STRUCT,PowerTfs_STRUCT] = sumcors_bootstrap(SpikeTrains,paramsIN, resultsDir,resultPostfix, BootstrapLoopMax, BootstrapLoopReport, nPSDs2Avg)
+function [PSDenv_STRUCT,PSDtfs_STRUCT,PowerMod_STRUCT,PowerTfs_STRUCT] = ...
+    sumcors_bootstrap(SpikeTrains,paramsIN, resultsDir,resultPostfix, anal)
 PSDtfs_STRUCT=[];
 PowerTfs_STRUCT=[];
-% % global  % figHandles ExpControlParams
 
 % This function returns the FFT of the SUMCORs (envelope) for each stimulus derived from the
 % spike output of one AN fiber. It also returns the envelope power within a
@@ -18,14 +18,12 @@ PowerTfs_STRUCT=[];
 
 
 %% *MH: HOW TO OPTIMIZE??
-PLOT_15panel=0;
-% [SACSCCfunctions,SACSCCmetrics,paramsOUT] = SACSCCanal_SNRenv_parallel(SpikeTrains,paramsIN,PLOT_15panel,resultsDir,resultPostfix,BootstrapLoopMax);
-[SACSCCfunctions,SACSCCmetrics,~] = SACSCCanal_SNRenv_parallel(SpikeTrains,paramsIN,PLOT_15panel,resultsDir,resultPostfix,BootstrapLoopMax);
-%
+[SACSCCfunctions,SACSCCmetrics,~] = Library.SACSCCanal_SNRenv_parallel(SpikeTrains, paramsIN, anal.figHandles.SACSCC.doPlot, resultsDir, resultPostfix, anal.BootstrapLoopMax, anal.winCorr0Add1Mul);
+
 % % % % Library.parsave([resultsDir 'sac' filesep 'sac' resultPostfix '.mat'],  SACSCCfunctions, SACSCCmetrics );
 
 %%% PSDenv computed in SACSCCanal_SNRenv and passed within SACSCCfunctions
-% SACSCCfunctions{end} gives the all the average values
+%%% SACSCCfunctions{end} gives the all the average values
 PSDenv_S=SACSCCfunctions{end}.PSDenv_A;
 PSDenv_N=SACSCCfunctions{end}.PSDenv_B;
 PSDenv_SN=SACSCCfunctions{end}.PSDenv_C;
@@ -58,8 +56,8 @@ CF_C_kHz=CF_A_kHz;
 % end
 
 %% *MH - look at spectra
-if paramsIN.plt
-% %     figure(figHandles.PSDplot);
+if anal.figHandles.PSDplot.doPlot
+    figure(anal.figHandles.PSDplot.han);
     clf;
     set (gcf, 'Units', 'normalized', 'Position', [.1 .1 .8 .8]);
     plot(PSDfreqVEC_Hz,PSDenv_S,'b-');
@@ -80,21 +78,21 @@ if paramsIN.plt
     Library.saveFigureAs([resultsDir 'png' filesep 'psd' resultPostfix '.tiff'])
 end
 % Divide the FFT output into modulation filters
-ModFreqs = [1,2,4,8,16,32,64];
-PowerModS = zeros(BootstrapLoopReport,length(ModFreqs));
-PowerModN = zeros(BootstrapLoopReport,length(ModFreqs));
-PowerModSN = zeros(BootstrapLoopReport,length(ModFreqs));
-PowerModS_noisefloor = zeros(BootstrapLoopReport,length(ModFreqs));
-PowerModN_noisefloor = zeros(BootstrapLoopReport,length(ModFreqs));
-PowerModSN_noisefloor = zeros(BootstrapLoopReport,length(ModFreqs));
+ModFreqs = anal.ModFreqs;
+PowerModS = zeros(anal.BootstrapLoopReport,length(ModFreqs));
+PowerModN = zeros(anal.BootstrapLoopReport,length(ModFreqs));
+PowerModSN = zeros(anal.BootstrapLoopReport,length(ModFreqs));
+PowerModS_noisefloor = zeros(anal.BootstrapLoopReport,length(ModFreqs));
+PowerModN_noisefloor = zeros(anal.BootstrapLoopReport,length(ModFreqs));
+PowerModSN_noisefloor = zeros(anal.BootstrapLoopReport,length(ModFreqs));
 
 %% Look at RAND PSDs as well to get noise floor.
 plt =0;
 qFactor=ones(size(ModFreqs));
 PSDsize=size(SACSCCfunctions{1}.PSDenv_A);
-for bs_var=1:BootstrapLoopReport
+for bs_var=1:anal.BootstrapLoopReport
     
-    ind=randsample(1:BootstrapLoopMax, nPSDs2Avg);
+    ind=randsample(1:anal.BootstrapLoopMax, anal.nPSDs2Avg);
     PSDenv_A=zeros(PSDsize);
     PSDenv_B=zeros(PSDsize);
     PSDenv_C=zeros(PSDsize);
@@ -111,7 +109,7 @@ for bs_var=1:BootstrapLoopReport
         PSDenv_C_NF=PSDenv_C_NF+SACSCCfunctions{ind(psd_smooth_var)}.rand.PSDenv_C/length(ind);
     end
     
-    binWeights = modFbank(PSDfreqVEC_Hz,ModFreqs, qFactor, plt);
+    binWeights = Library.modFbank(PSDfreqVEC_Hz,ModFreqs, qFactor, plt);
     
     PowerModS(bs_var,:)=nansum(binWeights.* repmat(PSDenv_A, length(ModFreqs), 1),2);
     PowerModN(bs_var,:) = nansum(binWeights.* repmat(PSDenv_B, length(ModFreqs), 1),2);
@@ -131,10 +129,10 @@ for bs_var=1:BootstrapLoopReport
 end
 
 %% Plot modPs (these figures and PowerMod_STRUCT are the only things that we should look at)
-if paramsIN.plt
+if anal.figHandles.modPPlots.doPlot
     lw=2;
     col='bkr';
-    % %     figure(figHandles.modPPlots);
+    figure(anal.figHandles.modPPlots.han);
     clf; hold on;
     
     errorbar(mean(PowerModS), std(PowerModS),[col(1) '-'],'linewidth',lw);
@@ -193,8 +191,8 @@ PowerMod_STRUCT.PowerModS_noisefloor=PowerModS_noisefloor;
 PowerMod_STRUCT.PowerModN_noisefloor=PowerModN_noisefloor;
 PowerMod_STRUCT.PowerModSN_noisefloor=PowerModSN_noisefloor;
 
-params=repmat(struct([]),BootstrapLoopMax,1);
-for i=1:BootstrapLoopMax
+params=repmat(struct([]),anal.BootstrapLoopMax,1);
+for i=1:anal.BootstrapLoopMax
     params(i).nLines=SACSCCmetrics{i,1}.nLines;
     params(i).NumDrivenSpikes=SACSCCmetrics{i,1}.NumDrivenSpikes;
     params(i).AvgRate_sps=SACSCCmetrics{i,1}.AvgRate_sps;

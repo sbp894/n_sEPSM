@@ -16,7 +16,8 @@ x_lb=[  0   0   0   0   0];
 x_ub=[150 400 100 100 1.0];
 options=optimset('Display','iter','MaxIter',1000,'MaxFunEvals',10000, 'Diagnostics','off','TolFun',1.0000e-05,'TolX',1.0000e-03);
 
-[x_sol,~,~,exitflag,~]=lsqcurvefit(@RLcurve,x_start,levels,rates,x_lb,x_ub,options);
+
+[x_sol,~,~,exitflag,~]=lsqcurvefit(@NELfuns.RLcurve,x_start,levels,rates,x_lb,x_ub,options);
 
 rates_est=feval('RLcurve',x_sol,levels);
 

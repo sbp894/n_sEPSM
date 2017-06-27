@@ -1,3 +1,8 @@
+%%
+% Temporary function while intergrating Christoph's realistic modulation
+% filters instead of our old brick filters. Should remove it in the future.
+
+%%
 function [PSDenv_STRUCT,PSDtfs_STRUCT,PowerMod_STRUCT,PowerTfs_STRUCT] = sumcors_bootstrapDTU(SpikeTrains,paramsIN, resultsDir,resultPostfix, BootstrapLoopMax, BootstrapLoopReport, nPSDs2Avg, figHandles )
 PSDtfs_STRUCT=[];
 PowerTfs_STRUCT=[];

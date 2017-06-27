@@ -1,4 +1,4 @@
-%% IMPORTANT
+% %% IMPORTANT
 % Important to note that order of SummaryVar and SpikeStimulusData are not the same
 % NEL data files have attn value. I have assumed 120 dB is the level
 % corresponding to 0 dB atten. Hence the line
@@ -73,7 +73,7 @@ parfor i=1:length(spike_data)
                 [pin, Fs]=audioread(StimsFNames{ind2use}{2,polarity_var}{1});
                 pin=pin*10^(-cur_attn/20);
                 
-                [h1,nSpikes1]=find_revcor(pin,spike_times,Fs,window_dur);
+                [h1,nSpikes1]=NELfuns.find_revcor(pin,spike_times,Fs,window_dur);
                 h=[h,h1];
                 nSpikes=nSpikes+nSpikes1;
                 
@@ -85,7 +85,7 @@ parfor i=1:length(spike_data)
             end
             h_revcor=flipud(mean(h,2));
             
-            [SNRenvACST, BF_revcor]=analyze_revcor(StimsFNames{i},h_revcor,cur_attn);
+            [SNRenvACST, BF_revcor]=NELfuns.analyze_revcor(StimsFNames{i},h_revcor,cur_attn);
             
             temp(i).h_revcor=h_revcor;
             temp(i).nSpikes4REVCOR=nSpikes;

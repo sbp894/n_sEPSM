@@ -8,20 +8,24 @@ if isempty(ExpControlParams)
     AN.fiberType.sr = 2;  % spontaneous rate (in spikes/s) of the fiber BEFORE refractory effects; "1" = Low; "2" = Medium; "3" = High
     AN.nTrials = 25;
     AN.species = 1;    % 1 for cat (2 for human with Shera et al. tuning; 3 for human with Glasberg & Moore tuning)
+    AN.ohcLoss_dB=0;
+    AN.ihcLoss_dB=0;
+    AN.totalLoss_dB=AN.ohcLoss_dB+ AN.ihcLoss_dB;
 else
     AN.CF=ExpControlParams.CF;
     AN.fiberType.sr =ExpControlParams.fiberType;
     AN.nTrials=ExpControlParams.nRep;
     AN.species = ExpControlParams.species;    % 1 for cat (2 for human with Shera et al. tuning; 3 for human with Glasberg & Moore tuning)   
+    
+    AN.ohcLoss_dB=ExpControlParams.ohcLoss_dB;
+    AN.ihcLoss_dB=ExpControlParams.ihcLoss_dB;
+    AN.totalLoss_dB=AN.ohcLoss_dB+ AN.ihcLoss_dB;
 end
 
 %%
 % AN.CF = AN.CF(1); % only select every third fiber
 %AN.bml = [25 25 22 22 25];
 
-AN.totalLoss_dB=0;
-AN.ohcLoss_dB=0;
-AN.ihcLoss_dB=AN.totalLoss_dB-AN.ohcLoss_dB;
 
 % Set OHC/IHC params for desired loss
 for i = 1:length(AN.CF)

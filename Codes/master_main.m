@@ -1,4 +1,11 @@
 %%
+% Updated on 27 June, 2017
+% The Front-End will save modulation power data for all conditions. If
+% fewer conditions are used, the back-end has to be changed. The variable 
+% SIMData has to be 6-D structure. But with fewer conditions, its dimension
+% reduces. Ex. instead of 1x1x1x2x1x1, it becomes 1x2. SimData is
+% automatically squeezed. 
+% 
 % function master_main(DataDir):
 %       Data Analysis: Input DataDir name, the function looks for the directory under NELData and does the analysis
 % function master_main(Simulation1DataAnal0):
@@ -11,20 +18,6 @@
 
 %% Set up Conditions
 function master_main(varargin)
-clear all; %#ok<CLALL>
-
-
-RootCodesDir= [pwd filesep];
-RootOUTPUTDir=[pwd filesep 'OUTPUT' filesep];
-
-global figHandles
-figHandles.PSDplot=11;
-figHandles.SACSCC=2;
-figHandles.meanRates=1;
-figHandles.modPPlots=13;
-
-
-cd(RootCodesDir);
 
 if nargin==0
     Simulation1DataAnal0=1;
@@ -47,49 +40,20 @@ else
     error('Type help master_main to see usage');
 end
 
-%%
-if Simulation1DataAnal0
-    ExpControlParams.SNR=-21:6:12;
-    ExpControlParams.level=65;
-    
-    
-    ExpControlParams.noiseTypes={'SAM', 'SSN'};
-    
-    ExpControlParams.noisePrefix = cell(1, length(ExpControlParams.noiseTypes));
-    for i=1:length(ExpControlParams.noiseTypes)
-        ExpControlParams.noisePrefix{i} = ['noise' filesep lower(ExpControlParams.noiseTypes{i}) '_simulation_dtu'];
-    end
-    
-    ExpControlParams.fiberType=2:3; %1:3; % L/M/H <--> 1/2/3
-    ExpControlParams.CF=[.25 .5 1 2]*1e3; %logspace(log10(125), log10(8e3), 21);
-    ExpControlParams.species=2;    % 1 for cat (2 for human with Shera et al. tuning; 3 for human with Glasberg & Moore tuning)
-    ExpControlParams.sentences=3:4; %1:10;
-    
-    ExpControlParams.nRep=25;
-    ExpControlParams.BootstrapLoopMax=24;
-    ExpControlParams.BootstrapLoopReport=60;
-    ExpControlParams.nPSDs2Avg=12;
-    ExpControlParams.fixSPL=0;
-    ExpControlParams.winCorr0Add1Mul=1;
-end
+%% Front-End
+RootOUTPUTDir=[pwd filesep 'OUTPUT' filesep];
+figHandles=Library.get_figHandles;
 
-%%
 if Simulation1DataAnal0 % Simulate
-    [resultsDir,resultTxt]=Analyze_Sim(ExpControlParams, RootOUTPUTDir);
+    ExpControlParams=Simulation.get_ExpControlParams;
+    [resultsDir,resultTxt]=Simulation.Analyze_Sim(ExpControlParams, RootOUTPUTDir, figHandles);
     save([resultsDir 'ExpControlParams.mat'],'ExpControlParams');
 else
-    [resultsDir,resultTxt]=Analyze_Data(DataDir);
+    [resultsDir,resultTxt]=DataAnal.Analyze_Data(DataDir);
 end
 
-% parse_saved_data_for_SNRenv2(resultsDir,resultTxt);
-if ~strcmp(resultsDir(end),filesep)
-    resultsDir=[resultsDir filesep];
-end
-
-% parse_saved_data_for_SNRenvDTU;
-% parse_saved_data_for_SNRenvDTU(resultsDir,resultTxt);
-% parse_saved_data_for_SNRenv3(resultsDir,resultTxt);
-parse_saved_data_for_SNRenv4(resultsDir,resultTxt);
+%% Back-End
+parse_saved_data_for_all_conds_SNRenv(resultsDir,resultTxt);
 if exist('ChinID','var')
     %     create_summary(ChinID);
     % %     plot_summary(ChinID);

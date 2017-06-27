@@ -1,6 +1,10 @@
-% function parse_saved_data_for_SNRenv2(resultsDir,resultTxt)
-resultsDir='D:\Study Stuff\Matlab\SNRenv-SimData-Updated4PSDavg\Output\Simulation\20170530-2\';
-resultTxt='CF_%1.4fk_Sent_%i_%s_level_%1.2f_SNR%i';
+%% Fun by SP
+% Works for old chin data SNRenv analysis. With new analysis paradigm (see below), need to change to work with chin data. 
+% new analysis paradigm -> (using realistic modulation filters instead of brick filters and not saving PSDs. For chin data, we should save all files though including TFSs, PSDs, SUMCORs. Need to work on that.)
+%%
+function parse_saved_data_for_SNRenv2(resultsDir,resultTxt)
+% resultsDir='D:\Study Stuff\Matlab\SNRenv-SimData-Updated4PSDavg\Output\Simulation\20170530-2\';
+% resultTxt='CF_%1.4fk_Sent_%i_%s_level_%1.2f_SNR%i';
 
 %%
 if resultsDir(end)~=filesep

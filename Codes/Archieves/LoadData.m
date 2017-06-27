@@ -2,7 +2,7 @@ function [SpikeTrainsC_plus,SpikeTrainsC_minus,paramsIn]=LoadData(DataDir,curFil
 
 CurDir=pwd;
 cd(DataDir);
-PicData=loadPic(str2double(curFileName(2:5)));
+PicData=NELfuns.loadPic(str2double(curFileName(2:5)));
 
 paramsIn.unitNum=PicData.General.unit;
 paramsIn.trackNum=PicData.General.track;
@@ -15,7 +15,7 @@ if paramsIn.unitNum<10
 else
     CFFile=(['Unit_' num2str(paramsIn.trackNum) '_' num2str(paramsIn.unitNum)]);
 end
-UnitData=eval('loadPic(%s)',CFFile); %#ok<EVLC>
+UnitData=eval('NELfuns.loadPic(%s)',CFFile); %#ok<EVLC>
 paramsIn.CF=UnitData.BF*1e3;
 
 spikedata=PicData.spikes{1};
